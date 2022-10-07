@@ -2,11 +2,12 @@ package com.wallet.demo.controller;
 
 import com.wallet.demo.payload.LoginRequest;
 import com.wallet.demo.payload.RegisterRequest;
-import com.wallet.demo.payload.response.ResponseMessage;
 import com.wallet.demo.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -21,16 +22,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest){
 
         return null;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest){
 
-        authService.registerUser(registerRequest);
-        return ResponseEntity.ok(
-                new ResponseMessage(ResponseMessage.USER_REGISTER_SUCCESSFULLY));
+        return authService.registerUser(registerRequest);
     }
 }

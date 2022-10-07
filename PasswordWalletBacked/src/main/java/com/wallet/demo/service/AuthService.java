@@ -2,7 +2,9 @@ package com.wallet.demo.service;
 
 import com.wallet.demo.entity.User;
 import com.wallet.demo.payload.RegisterRequest;
+import com.wallet.demo.payload.response.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -11,7 +13,6 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.util.Base64;
-import java.util.TreeSet;
 
 import static javax.xml.crypto.dsig.SignatureMethod.HMAC_SHA512;
 
@@ -25,7 +26,14 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public void registerUser(RegisterRequest registerRequest){
+    public ResponseEntity<ResponseMessage> registerUser(RegisterRequest registerRequest){
+
+        if(userService.checkIfUserAlreadyExist(registerRequest)){
+            return ResponseEntity.badRequest().body(
+                    new ResponseMessage(ResponseMessage.ERR_USER_ALREADY_EXISTS)
+            );
+        }
+
         User newUser = new User(registerRequest.getLogin(), registerRequest.getIsHash());
 
         newUser.setPasswordHash(registerRequest.getIsHash()
@@ -37,8 +45,8 @@ public class AuthService {
 
         userService.save(newUser);
 
-
-
+        return ResponseEntity.ok(
+                new ResponseMessage(ResponseMessage.USER_REGISTER_SUCCESSFULLY));
     }
 
     public String calculateSHA512(String text) {
@@ -58,6 +66,8 @@ public class AuthService {
     }
 
 
+
+    //nie wyszukuje HMAC_SHA512
     public String calculateHMAC(String text) {
         String key="key";
         Mac sha512Hmac;
