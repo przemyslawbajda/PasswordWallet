@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,4 +23,7 @@ public class User {
     private String salt;
 
     private boolean isPasswordKeptAsHash;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Password> passwords;
 }

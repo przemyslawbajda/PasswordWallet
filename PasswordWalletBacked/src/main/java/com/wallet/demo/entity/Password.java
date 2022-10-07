@@ -22,4 +22,8 @@ public class Password {
     private String description;
 
     private String login;
+
+    @ManyToOne
+    @JoinColumn(name="id_user")
+    private User user;
 }
