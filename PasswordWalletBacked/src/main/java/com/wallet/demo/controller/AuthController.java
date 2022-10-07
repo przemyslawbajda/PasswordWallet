@@ -2,6 +2,9 @@ package com.wallet.demo.controller;
 
 import com.wallet.demo.payload.LoginRequest;
 import com.wallet.demo.payload.RegisterRequest;
+import com.wallet.demo.payload.response.ResponseMessage;
+import com.wallet.demo.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    private AuthService authService;
+
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
@@ -19,6 +29,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest){
 
-        return null;
+        authService.registerUser(registerRequest);
+        return ResponseEntity.ok(
+                new ResponseMessage(ResponseMessage.USER_REGISTER_SUCCESSFULLY));
     }
 }

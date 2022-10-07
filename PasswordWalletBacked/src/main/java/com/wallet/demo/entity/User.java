@@ -26,4 +26,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Password> passwords;
+
+    public User(String login, boolean isPasswordKeptAsHash){
+        this.login = login;
+        this.isPasswordKeptAsHash = isPasswordKeptAsHash;
+    }
 }

@@ -9,5 +9,5 @@ public class RegisterRequest {
 
     private String login;
     private String password;
-    private boolean isHash;
+    private Boolean isHash;
 }
