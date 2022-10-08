@@ -1,8 +1,12 @@
 package com.wallet.demo.service;
 
 import com.wallet.demo.entity.User;
+import com.wallet.demo.payload.LoginRequest;
 import com.wallet.demo.payload.RegisterRequest;
+import com.wallet.demo.payload.response.LoginResponse;
 import com.wallet.demo.payload.response.ResponseMessage;
+import com.wallet.demo.utils.JwtUtils;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,7 +16,9 @@ import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
+import java.security.SignatureException;
 import java.util.Base64;
+import java.util.Date;
 
 import static javax.xml.crypto.dsig.SignatureMethod.HMAC_SHA512;
 
@@ -21,14 +27,49 @@ public class AuthService {
 
     private UserService userService;
 
+    JwtUtils jwtUtils;
+
     @Autowired
-    public AuthService(UserService userService) {
+    public AuthService(UserService userService, JwtUtils jwtUtils) {
         this.userService = userService;
+        this.jwtUtils = jwtUtils;
     }
+
+    public ResponseEntity<?> loginUser(LoginRequest loginRequest){
+
+        if(!userService.checkIfUserAlreadyExist(loginRequest.getLogin())){
+            return ResponseEntity.badRequest().body(
+                    new ResponseMessage(ResponseMessage.ERR_INCORRECT_LOGIN_PASSWORD)
+            );
+        }
+
+        User user = userService.getUserByLogin(loginRequest.getLogin());
+
+        String hashedPassword = user.getIsPasswordKeptAsHash()
+                                        ? calculateSHA512(loginRequest.getPassword())
+                                        : calculateHMAC(loginRequest.getPassword());
+
+
+        if(!user.getPasswordHash().equals(hashedPassword)){
+            return ResponseEntity.badRequest().body(
+                    new ResponseMessage(ResponseMessage.ERR_INCORRECT_LOGIN_PASSWORD)
+            );
+        }
+
+        String jwt = jwtUtils.calculateJwt(user.getLogin());
+
+        return ResponseEntity.ok(
+                new LoginResponse(ResponseMessage.USER_LOGIN_SUCCESSFULLY,
+                                    user.getLogin(),
+                                    jwt)
+        );
+
+    }
+
 
     public ResponseEntity<ResponseMessage> registerUser(RegisterRequest registerRequest){
 
-        if(userService.checkIfUserAlreadyExist(registerRequest)){
+        if(userService.checkIfUserAlreadyExist(registerRequest.getLogin())){
             return ResponseEntity.badRequest().body(
                     new ResponseMessage(ResponseMessage.ERR_USER_ALREADY_EXISTS)
             );
@@ -84,6 +125,7 @@ public class AuthService {
         }
         return result;
     }
+
 
 
 

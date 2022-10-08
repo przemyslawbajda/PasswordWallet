@@ -20,7 +20,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Boolean checkIfUserAlreadyExist(RegisterRequest registerRequest){
-        return userRepository.existsByLogin(registerRequest.getLogin());
+    public Boolean checkIfUserAlreadyExist(String login){
+        return userRepository.existsByLogin(login);
+    }
+
+    public User getUserByLogin(String login){
+        return userRepository.findUserByLogin(login);
     }
 }

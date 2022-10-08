@@ -23,7 +23,7 @@ public class User {
 
     private String salt;
 
-    private boolean isPasswordKeptAsHash;
+    private Boolean isPasswordKeptAsHash;
 
     @OneToMany(mappedBy = "user")
     private Set<Password> passwords;
@@ -31,5 +31,8 @@ public class User {
     public User(String login, boolean isPasswordKeptAsHash){
         this.login = login;
         this.isPasswordKeptAsHash = isPasswordKeptAsHash;
+    }
+
+    public User() {
     }
 }
