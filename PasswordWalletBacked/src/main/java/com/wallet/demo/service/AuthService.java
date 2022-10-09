@@ -8,6 +8,7 @@ import com.wallet.demo.payload.response.ResponseMessage;
 import com.wallet.demo.utils.JwtUtils;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,9 @@ public class AuthService {
 
     JwtUtils jwtUtils;
 
+    @Value("${app.pepper}")
+    private static String PEPPER;
+
     @Autowired
     public AuthService(UserService userService, JwtUtils jwtUtils) {
         this.userService = userService;
@@ -46,7 +50,7 @@ public class AuthService {
         User user = userService.getUserByLogin(loginRequest.getLogin());
 
         String hashedPassword = user.getIsPasswordKeptAsHash()
-                                        ? calculateSHA512(loginRequest.getPassword())
+                                        ? calculateSHA512(PEPPER+user.getSalt()+loginRequest.getPassword())
                                         : calculateHMAC(loginRequest.getPassword());
 
 
@@ -77,13 +81,13 @@ public class AuthService {
 
         User newUser = new User(registerRequest.getLogin(), registerRequest.getIsHash());
 
-        newUser.setPasswordHash(registerRequest.getIsHash()
-                                ? calculateSHA512(registerRequest.getPassword()
-        )                       : calculateHMAC(registerRequest.getPassword()));
-
         // Salt?
-        newUser.setSalt("aaa");
+        newUser.setSalt(generateSalt());
 
+        newUser.setPasswordHash(registerRequest.getIsHash()
+                                ? calculateSHA512(PEPPER+newUser.getSalt()+registerRequest.getPassword()
+        )                       : calculateHMAC(registerRequest.getPassword()));
+        
         userService.save(newUser);
 
         return ResponseEntity.ok(
@@ -126,7 +130,12 @@ public class AuthService {
         return result;
     }
 
-
+    public String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte bytes[] = new byte[20];
+        random.nextBytes(bytes);
+        return bytes.toString();
+    }
 
 
 }

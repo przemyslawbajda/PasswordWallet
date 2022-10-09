@@ -1,6 +1,7 @@
 package com.wallet.demo.utils;
 
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.SignatureException;
@@ -9,7 +10,8 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
-    String jwtSecret = "dj84He8N24kv8SV";
+    @Value("${app.jwtSecret}")
+    String jwtSecret;
 
     public String calculateJwt(String login) {
         long now = System.currentTimeMillis();
