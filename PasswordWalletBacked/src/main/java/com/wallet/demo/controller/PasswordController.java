@@ -1,22 +1,32 @@
 package com.wallet.demo.controller;
 
+import com.wallet.demo.payload.PasswordRequest;
+import com.wallet.demo.service.PasswordService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
 public class PasswordController {
 
-    public ResponseEntity<?> addPassword(){
+    PasswordService passwordService;
 
-        return null;
+    @Autowired
+    public PasswordController(PasswordService passwordService) {
+        this.passwordService = passwordService;
     }
 
-    public ResponseEntity<?> editPassword(){
+    @PostMapping("/passwords")
+    public ResponseEntity<?> addPassword(@RequestBody PasswordRequest passwordRequest){
 
-        return null;
+        return passwordService.addPassword(passwordRequest);
+    }
+
+    @PutMapping("/passwords")
+    public ResponseEntity<?> editPassword(@RequestBody PasswordRequest passwordRequest){
+
+        return passwordService.editPassword(passwordRequest);
     }
 }

@@ -26,4 +26,14 @@ public class Password {
     @ManyToOne
     @JoinColumn(name="id_user")
     private User user;
+
+    public Password(String password, String webAddress, String description, String login) {
+        this.password = password;
+        this.webAddress = webAddress;
+        this.description = description;
+        this.login = login;
+    }
+
+    public Password() {
+    }
 }

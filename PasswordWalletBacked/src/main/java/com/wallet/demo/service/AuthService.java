@@ -81,13 +81,12 @@ public class AuthService {
 
         User newUser = new User(registerRequest.getLogin(), registerRequest.getIsHash());
 
-        // Salt?
         newUser.setSalt(generateSalt());
 
         newUser.setPasswordHash(registerRequest.getIsHash()
                                 ? calculateSHA512(PEPPER+newUser.getSalt()+registerRequest.getPassword()
         )                       : calculateHMAC(registerRequest.getPassword()));
-        
+
         userService.save(newUser);
 
         return ResponseEntity.ok(

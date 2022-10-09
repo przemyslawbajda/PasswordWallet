@@ -14,6 +14,10 @@ public class ResponseMessage {
     public final static String USER_REGISTER_SUCCESSFULLY = "User registered successfully";
     public final static String USER_LOGIN_SUCCESSFULLY = "User login successfully";
 
+    public final static String NEW_PASSWORD_ADDED = "New password added";
+    public final static String PASSWORD_EDITED = "Password edited";
+
     public final static String ERR_USER_ALREADY_EXISTS = "User with this login already exists!";
     public final static String ERR_INCORRECT_LOGIN_PASSWORD = "Incorrect login or password";
+    public final static String ERR_UNAUTHORIZED_ACTION = "Unauthorized action";
 }
