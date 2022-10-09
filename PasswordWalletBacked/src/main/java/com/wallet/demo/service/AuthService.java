@@ -1,6 +1,7 @@
 package com.wallet.demo.service;
 
 import com.wallet.demo.entity.User;
+import com.wallet.demo.payload.ChangeMainPasswordRequest;
 import com.wallet.demo.payload.LoginRequest;
 import com.wallet.demo.payload.RegisterRequest;
 import com.wallet.demo.payload.response.LoginResponse;
@@ -93,6 +94,47 @@ public class AuthService {
                 new ResponseMessage(ResponseMessage.USER_REGISTER_SUCCESSFULLY));
     }
 
+    public ResponseEntity<?> changeMainPassword(ChangeMainPasswordRequest changeMainPasswordRequest) {
+
+        if(!jwtUtils.validateJwtToken(changeMainPasswordRequest.getJwtToken())){
+            return ResponseEntity.badRequest().body(
+                    new ResponseMessage(ResponseMessage.ERR_UNAUTHORIZED_ACTION)
+            );
+        }
+
+        String userLogin = jwtUtils.getUsernameFromJwtToken(changeMainPasswordRequest.getJwtToken());
+
+        User user = userService.getUserByLogin(userLogin);
+
+        String oldPasswordHash;
+
+        //TODO: refactor
+        if(user.getIsPasswordKeptAsHash()){
+            oldPasswordHash = calculateSHA512(PEPPER+user.getSalt()+changeMainPasswordRequest.getOldPassword());
+            if(!oldPasswordHash.equals(user.getPasswordHash())){
+                return ResponseEntity.badRequest().body(
+                        new ResponseMessage(ResponseMessage.ERR_MAIN_OLD_PASSWORD_WRONG)
+                );
+            }
+
+            user.setSalt(generateSalt());
+            user.setPasswordHash(calculateSHA512(PEPPER+user.getSalt()+changeMainPasswordRequest.getNewPassword()));
+
+            userService.save(user);
+
+            return ResponseEntity.ok(
+                    new ResponseMessage(ResponseMessage.MAIN_PASSWORD_CHANGED)
+            );
+
+        }else{
+            oldPasswordHash = calculateHMAC(changeMainPasswordRequest.getOldPassword());
+            //TODO: jak bedzie hmac dzialac
+        }
+
+
+        return null;
+    }
+
     public String calculateSHA512(String text) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
@@ -135,6 +177,7 @@ public class AuthService {
         random.nextBytes(bytes);
         return bytes.toString();
     }
+
 
 
 }

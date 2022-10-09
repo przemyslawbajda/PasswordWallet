@@ -1,5 +1,6 @@
 package com.wallet.demo.controller;
 
+import com.wallet.demo.payload.ChangeMainPasswordRequest;
 import com.wallet.demo.payload.LoginRequest;
 import com.wallet.demo.payload.RegisterRequest;
 import com.wallet.demo.service.AuthService;
@@ -33,5 +34,10 @@ public class AuthController {
         return authService.registerUser(registerRequest);
     }
 
+    @PutMapping("/change-main-password")
+    public ResponseEntity<?> changeMainPassword(@RequestBody ChangeMainPasswordRequest changeMainPasswordRequest){
+
+        return authService.changeMainPassword(changeMainPasswordRequest);
+    }
 
 }

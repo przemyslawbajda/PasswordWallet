@@ -18,13 +18,13 @@ public class PasswordService {
 
     private PasswordRepository passwordRepository;
     private JwtUtils jwtUtils;
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public PasswordService(PasswordRepository passwordRepository, JwtUtils jwtUtils, UserRepository userRepository) {
+    public PasswordService(PasswordRepository passwordRepository, JwtUtils jwtUtils, UserService userService) {
         this.passwordRepository = passwordRepository;
         this.jwtUtils = jwtUtils;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public ResponseEntity<?> addPassword(PasswordRequest passwordRequest){
@@ -37,7 +37,7 @@ public class PasswordService {
 
         String userLogin = jwtUtils.getUsernameFromJwtToken(passwordRequest.getJwtToken());
 
-        User user = userRepository.findUserByLogin(userLogin);
+        User user = userService.getUserByLogin(userLogin);
 
 
         Password password = new Password(passwordRequest.getPassword(),
