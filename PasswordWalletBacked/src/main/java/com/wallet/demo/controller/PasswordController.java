@@ -19,14 +19,14 @@ public class PasswordController {
     }
 
     @PostMapping("/passwords")
-    public ResponseEntity<?> addPassword(@RequestBody PasswordRequest passwordRequest){
+    public ResponseEntity<?> addPassword(@RequestBody PasswordRequest passwordRequest, @RequestHeader("JwtToken") String jwtToken){
 
-        return passwordService.addPassword(passwordRequest);
+        return passwordService.addPassword(passwordRequest, jwtToken);
     }
 
     @PutMapping("/passwords")
-    public ResponseEntity<?> editPassword(@RequestBody PasswordRequest passwordRequest){
+    public ResponseEntity<?> editPassword(@RequestBody PasswordRequest passwordRequest, @RequestHeader("JwtToken") String jwtToken){
 
-        return passwordService.editPassword(passwordRequest);
+        return passwordService.editPassword(passwordRequest, jwtToken);
     }
 }

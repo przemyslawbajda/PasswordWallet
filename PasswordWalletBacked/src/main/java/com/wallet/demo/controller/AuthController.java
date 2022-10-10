@@ -35,9 +35,9 @@ public class AuthController {
     }
 
     @PutMapping("/change-main-password")
-    public ResponseEntity<?> changeMainPassword(@RequestBody ChangeMainPasswordRequest changeMainPasswordRequest){
+    public ResponseEntity<?> changeMainPassword(@RequestBody ChangeMainPasswordRequest changeMainPasswordRequest, @RequestHeader("JwtToken") String jwtToken){
 
-        return authService.changeMainPassword(changeMainPasswordRequest);
+        return authService.changeMainPassword(changeMainPasswordRequest, jwtToken);
     }
 
 }

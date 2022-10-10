@@ -94,15 +94,15 @@ public class AuthService {
                 new ResponseMessage(ResponseMessage.USER_REGISTER_SUCCESSFULLY));
     }
 
-    public ResponseEntity<?> changeMainPassword(ChangeMainPasswordRequest changeMainPasswordRequest) {
+    public ResponseEntity<?> changeMainPassword(ChangeMainPasswordRequest changeMainPasswordRequest, String jwtToken) {
 
-        if(!jwtUtils.validateJwtToken(changeMainPasswordRequest.getJwtToken())){
+        if(!jwtUtils.validateJwtToken(jwtToken)){
             return ResponseEntity.badRequest().body(
                     new ResponseMessage(ResponseMessage.ERR_UNAUTHORIZED_ACTION)
             );
         }
 
-        String userLogin = jwtUtils.getUsernameFromJwtToken(changeMainPasswordRequest.getJwtToken());
+        String userLogin = jwtUtils.getUsernameFromJwtToken(jwtToken);
 
         User user = userService.getUserByLogin(userLogin);
 

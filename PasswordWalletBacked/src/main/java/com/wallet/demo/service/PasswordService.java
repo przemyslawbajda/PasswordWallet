@@ -27,15 +27,15 @@ public class PasswordService {
         this.userService = userService;
     }
 
-    public ResponseEntity<?> addPassword(PasswordRequest passwordRequest){
+    public ResponseEntity<?> addPassword(PasswordRequest passwordRequest, String jwtToken){
 
-        if(!jwtUtils.validateJwtToken(passwordRequest.getJwtToken())){
+        if(!jwtUtils.validateJwtToken(jwtToken)){
             return ResponseEntity.badRequest().body(
                     new ResponseMessage(ResponseMessage.ERR_UNAUTHORIZED_ACTION)
             );
         }
 
-        String userLogin = jwtUtils.getUsernameFromJwtToken(passwordRequest.getJwtToken());
+        String userLogin = jwtUtils.getUsernameFromJwtToken(jwtToken);
 
         User user = userService.getUserByLogin(userLogin);
 
@@ -54,8 +54,8 @@ public class PasswordService {
         );
     }
 
-    public ResponseEntity<?> editPassword(PasswordRequest passwordRequest) {
-        if(!jwtUtils.validateJwtToken(passwordRequest.getJwtToken())){
+    public ResponseEntity<?> editPassword(PasswordRequest passwordRequest, String jwtToken) {
+        if(!jwtUtils.validateJwtToken(jwtToken)){
             return ResponseEntity.badRequest().body(
                     new ResponseMessage(ResponseMessage.ERR_UNAUTHORIZED_ACTION)
             );
