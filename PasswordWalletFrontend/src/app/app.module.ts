@@ -11,6 +11,9 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatInputModule} from "@angular/material/input";
+import {ReactiveFormsModule} from "@angular/forms";
+import {HttpClientModule} from "@angular/common/http";
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import {MatInputModule} from "@angular/material/input";
         MatButtonModule,
         MatCardModule,
         NgbModule,
-        MatInputModule
+        MatInputModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        MatSnackBarModule
     ],
   providers: [],
   bootstrap: [AppComponent]
