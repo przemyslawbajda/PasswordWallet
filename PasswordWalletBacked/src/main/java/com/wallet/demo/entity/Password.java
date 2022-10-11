@@ -1,7 +1,9 @@
 package com.wallet.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+
 
 import javax.persistence.*;
 
@@ -15,6 +17,7 @@ public class Password {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     private String password;
 
     private String webAddress;
@@ -25,6 +28,7 @@ public class Password {
 
     @ManyToOne
     @JoinColumn(name="id_user")
+    @JsonIgnore
     private User user;
 
     public Password(String password, String webAddress, String description, String login) {

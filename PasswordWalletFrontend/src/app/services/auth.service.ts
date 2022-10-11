@@ -9,7 +9,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 @Injectable({
   providedIn: "root"
 })
-
 export class AuthService {
 
   constructor(private authControllerService: AuthControllerService,

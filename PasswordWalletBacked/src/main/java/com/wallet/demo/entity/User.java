@@ -1,5 +1,6 @@
 package com.wallet.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,13 +20,16 @@ public class User {
 
     private String login;
 
+    @JsonIgnore
     private String passwordHash;
 
+    @JsonIgnore
     private String salt;
 
     private Boolean isPasswordKeptAsHash;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Password> passwords;
 
     public User(String login, boolean isPasswordKeptAsHash){
