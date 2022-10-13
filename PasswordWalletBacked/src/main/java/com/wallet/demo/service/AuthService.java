@@ -28,7 +28,6 @@ import static javax.xml.crypto.dsig.SignatureMethod.HMAC_SHA512;
 public class AuthService {
 
     private UserService userService;
-
     JwtUtils jwtUtils;
 
     @Value("${app.pepper}")

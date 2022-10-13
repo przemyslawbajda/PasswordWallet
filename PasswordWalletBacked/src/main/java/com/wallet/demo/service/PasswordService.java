@@ -11,6 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +47,9 @@ public class PasswordService {
 
         User user = userService.getUserByLogin(userLogin);
 
+        String encryptedPassword = encryptPassword(passwordRequest.getPassword(), user.getPasswordHash());
 
-        Password password = new Password(passwordRequest.getPassword(),
+        Password password = new Password(encryptedPassword,
                                         passwordRequest.getWebAddress(),
                                         passwordRequest.getDescription(),
                                         passwordRequest.getLogin());
@@ -55,6 +63,7 @@ public class PasswordService {
         );
     }
 
+    //TODO: refactor z enkrypcja hasla
     public ResponseEntity<?> editPassword(PasswordRequest passwordRequest, String jwtToken) {
         if(!jwtUtils.validateJwtToken(jwtToken)){
             return ResponseEntity.badRequest().body(
@@ -84,7 +93,37 @@ public class PasswordService {
         User user = userService.getUserByLogin(jwtUtils.getUsernameFromJwtToken(jwtToken));
 
         return this.passwordRepository.findAllByUser(user);
-        //return this.passwordRepository.getPasswordsByLogin(jwtUtils.getUsernameFromJwtToken(jwtToken));
-        //return this.passwordRepository.findAll();
+    }
+
+    public static String encryptPassword(String password, String encryptionKey) {
+        String algorithm = "AES";
+
+        try{
+            Key key = new SecretKeySpec(trimKey(encryptionKey).getBytes(), algorithm);
+            Cipher cipher = Cipher.getInstance(algorithm);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            byte[] encryptedPassword = cipher.doFinal(password.getBytes());
+            return Base64.getEncoder().encodeToString(encryptedPassword);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String decryptPassword(String passwordToDecrypt, String encryptionKey){
+        String algorithm = "AES";
+
+        try{
+            Key key = new SecretKeySpec(trimKey(encryptionKey).getBytes(), algorithm);
+            Cipher cipher = Cipher.getInstance(algorithm);
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            byte[] decodedPassword = Base64.getDecoder().decode(passwordToDecrypt);
+            return new String(decodedPassword);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String trimKey(String key){
+        return key.substring(0,32);
     }
 }

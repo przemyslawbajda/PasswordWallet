@@ -24,7 +24,7 @@ export class AddNewPasswordComponent implements OnInit {
       login: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required]),
       webAddress: new FormControl(null, [Validators.required]),
-      description: new FormControl(null)
+      description: new FormControl("")
     })
   }
 
