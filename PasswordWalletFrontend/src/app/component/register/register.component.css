@@ -15,7 +15,21 @@
   width: 100%;
 }
 
-.sign-up-button {
+.mat-button-toggle-group {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.mat-button-toggle {
+  width: 100%;
+}
+
+.mat-button-toggle-checked {
+  background-color: #f44336;
+  color: #FFF;
+}
+
+.sign-in-button {
   font-weight: bold;
   text-decoration: underline;
   margin: 10px 0 0 auto;

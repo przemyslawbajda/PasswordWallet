@@ -16,27 +16,37 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {TokenInterceptor} from "./interceptors/token.interceptor";
 import {PasswordListComponent} from "./component/password-list/password-list.component";
+import {ToolbarComponent} from "./component/toolbar/toolbar.component";
+import {PasswordComponent} from "./component/password/password.component";
+import {MatIconModule} from "@angular/material/icon";
+import {RegisterComponent} from "./component/register/register.component";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    PasswordListComponent
+    PasswordListComponent,
+    ToolbarComponent,
+    PasswordComponent,
+    RegisterComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatFormFieldModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatCardModule,
-        NgbModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        MatSnackBarModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatCardModule,
+    NgbModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatButtonToggleModule
+  ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptor,

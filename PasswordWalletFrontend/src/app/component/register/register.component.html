@@ -1,0 +1,32 @@
+<mat-card class="form">
+
+  <form [formGroup]="form">
+    <mat-form-field  appearance="fill" color="warn">
+      <mat-label>Login</mat-label>
+      <input formControlName="login" matInput>
+      <mat-error *ngIf="form.controls['login'].hasError('required')">Login is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" color="warn">
+      <mat-label>Password</mat-label>
+      <input formControlName="password" matInput>
+      <mat-error *ngIf="form.controls['password'].hasError('required')">Password is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" color="warn">
+      <mat-label>Confirm Password</mat-label>
+      <input formControlName="confirmPassword" matInput [errorStateMatcher]="confirmPasswordErrorStateMatcher">
+      <mat-error *ngIf="form.controls['confirmPassword'].hasError('required')">Confirm Password is required</mat-error>
+      <mat-error *ngIf="form.hasError('notSame')">Passwords are different</mat-error>
+    </mat-form-field>
+
+    <mat-button-toggle-group (valueChange)="setIsHashFormValue($event)" [value]="true">
+      <mat-button-toggle [value]="true">SHA-512</mat-button-toggle>
+      <mat-button-toggle [value]="false">HMAC</mat-button-toggle>
+    </mat-button-toggle-group>
+  </form>
+
+  <button mat-raised-button color="warn" (click)="onRegister()" [disabled]="form.invalid">Register</button>
+  <span class="sign-in-button" [routerLink]="['','login']">or Sign In</span>
+
+</mat-card>
