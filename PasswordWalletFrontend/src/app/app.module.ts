@@ -21,6 +21,7 @@ import {PasswordComponent} from "./component/password/password.component";
 import {MatIconModule} from "@angular/material/icon";
 import {RegisterComponent} from "./component/register/register.component";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import { AddNewPasswordComponent } from './component/add-new-password/add-new-password.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     PasswordListComponent,
     ToolbarComponent,
     PasswordComponent,
-    RegisterComponent
+    RegisterComponent,
+    AddNewPasswordComponent
   ],
   imports: [
     BrowserModule,

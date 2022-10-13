@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
   public onRegister(): void{
     this.authService.register({login: this.form.value.login,
                               password: this.form.value.password,
-                              isHash: this.form.value.isHash});
+                              isHash: this.form.value.isHashed});
   }
 
   setIsHashFormValue(formValue: boolean): void {

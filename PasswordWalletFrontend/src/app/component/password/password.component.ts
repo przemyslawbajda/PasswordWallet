@@ -17,4 +17,8 @@ export class PasswordComponent {
   public onDelete(): void {}
 
   public onEdit(): void {}
+
+  onTogglePassword() {
+
+  }
 }

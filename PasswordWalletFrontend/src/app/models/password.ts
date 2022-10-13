@@ -3,4 +3,5 @@ export interface Password {
   id: number;
   login: string;
   webAddress: string;
+  password?: string;
 }
