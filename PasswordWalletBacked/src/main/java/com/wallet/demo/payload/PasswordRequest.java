@@ -12,5 +12,4 @@ public class PasswordRequest {
     private String webAddress;
     private String description;
     private String login;
-    private String jwtToken;
 }

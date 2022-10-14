@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -35,9 +36,20 @@ public class PasswordController {
     }
 
     @GetMapping("passwords")
-    public List<Password> getPasswords(@RequestHeader("JwtToken") String jwtToken){
-
+    public Set<Password> getPasswords(@RequestHeader("JwtToken") String jwtToken){
 
         return passwordService.getPasswords(jwtToken);
+    }
+
+    @GetMapping("passwords/{passwordId}")
+    public ResponseEntity<?> getDecryptedPassword(@PathVariable Long passwordId, @RequestHeader("JwtToken") String jwtToken){
+
+        return passwordService.getDecryptedPassword(passwordId, jwtToken);
+    }
+
+    @DeleteMapping("passwords/{passwordId}")
+    public ResponseEntity<?> deletePassword(@PathVariable Long passwordId, @RequestHeader("JwtToken") String jwtToken){
+
+        return passwordService.deletePassword(passwordId, jwtToken);
     }
 }

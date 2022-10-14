@@ -19,6 +19,7 @@ public class ResponseMessage {
 
     public final static String NEW_PASSWORD_ADDED = "New password added";
     public final static String PASSWORD_EDITED = "Password edited";
+    public final static String PASSWORD_DELETED = "Password deleted";
 
     public final static String ERR_USER_ALREADY_EXISTS = "User with this login already exists!";
     public final static String ERR_INCORRECT_LOGIN_PASSWORD = "Incorrect login or password";

@@ -22,6 +22,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {RegisterComponent} from "./component/register/register.component";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import { AddNewPasswordComponent } from './component/add-new-password/add-new-password.component';
+import { EditPasswordComponent } from './component/edit-password/edit-password.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { AddNewPasswordComponent } from './component/add-new-password/add-new-pa
     ToolbarComponent,
     PasswordComponent,
     RegisterComponent,
-    AddNewPasswordComponent
+    AddNewPasswordComponent,
+    EditPasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,8 @@ import { AddNewPasswordComponent } from './component/add-new-password/add-new-pa
     HttpClientModule,
     MatSnackBarModule,
     MatIconModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatDialogModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -1,5 +1,6 @@
 package com.wallet.demo.service;
 
+import com.wallet.demo.entity.Password;
 import com.wallet.demo.entity.User;
 import com.wallet.demo.payload.ChangeMainPasswordRequest;
 import com.wallet.demo.payload.LoginRequest;
@@ -21,6 +22,8 @@ import java.security.*;
 import java.security.SignatureException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static javax.xml.crypto.dsig.SignatureMethod.HMAC_SHA512;
 
@@ -29,14 +32,16 @@ public class AuthService {
 
     private UserService userService;
     JwtUtils jwtUtils;
+    PasswordService passwordService;
 
     @Value("${app.pepper}")
     private static String PEPPER;
 
     @Autowired
-    public AuthService(UserService userService, JwtUtils jwtUtils) {
+    public AuthService(UserService userService, JwtUtils jwtUtils, PasswordService passwordService) {
         this.userService = userService;
         this.jwtUtils = jwtUtils;
+        this.passwordService = passwordService;
     }
 
     public ResponseEntity<?> loginUser(LoginRequest loginRequest){
@@ -102,9 +107,7 @@ public class AuthService {
         }
 
         String userLogin = jwtUtils.getUsernameFromJwtToken(jwtToken);
-
         User user = userService.getUserByLogin(userLogin);
-
         String oldPasswordHash;
 
         //TODO: refactor
@@ -119,6 +122,19 @@ public class AuthService {
             user.setSalt(generateSalt());
             user.setPasswordHash(calculateSHA512(PEPPER+user.getSalt()+changeMainPasswordRequest.getNewPassword()));
 
+            ////////
+
+            Set<Password> passwordList = passwordService.getPasswords(jwtToken);
+
+            passwordList.forEach(password -> {
+                String decodedPassword = PasswordService.decryptPassword(password.getPassword(), oldPasswordHash);
+                password.setPassword(PasswordService.encryptPassword(decodedPassword,user.getPasswordHash()));
+            });
+
+            user.setPasswords(passwordList);
+
+
+            ////////
             userService.save(user);
 
             return ResponseEntity.ok(

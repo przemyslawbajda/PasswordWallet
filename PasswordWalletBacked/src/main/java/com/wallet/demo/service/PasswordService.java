@@ -5,21 +5,18 @@ import com.wallet.demo.entity.User;
 import com.wallet.demo.payload.PasswordRequest;
 import com.wallet.demo.payload.response.ResponseMessage;
 import com.wallet.demo.repository.PasswordRepository;
-import com.wallet.demo.repository.UserRepository;
 import com.wallet.demo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PasswordService {
@@ -63,7 +60,6 @@ public class PasswordService {
         );
     }
 
-    //TODO: refactor z enkrypcja hasla
     public ResponseEntity<?> editPassword(PasswordRequest passwordRequest, String jwtToken) {
         if(!jwtUtils.validateJwtToken(jwtToken)){
             return ResponseEntity.badRequest().body(
@@ -71,10 +67,14 @@ public class PasswordService {
             );
         }
 
+        String username = jwtUtils.getUsernameFromJwtToken(jwtToken);
+        User user = userService.getUserByLogin(username);
+        String encryptedPassword = encryptPassword(passwordRequest.getPassword(), user.getPasswordHash());
+
         Optional<Password> password = passwordRepository.findById(passwordRequest.getId());
 
         password.ifPresent( thePassword -> {
-            thePassword.setPassword(passwordRequest.getPassword());
+            thePassword.setPassword(encryptedPassword);
             thePassword.setDescription(passwordRequest.getDescription());
             thePassword.setWebAddress(passwordRequest.getWebAddress());
             thePassword.setLogin(passwordRequest.getLogin());
@@ -88,11 +88,48 @@ public class PasswordService {
         );
     }
 
-    public List<Password> getPasswords(String jwtToken) {
+    public Set<Password> getPasswords(String jwtToken) {
 
         User user = userService.getUserByLogin(jwtUtils.getUsernameFromJwtToken(jwtToken));
 
         return this.passwordRepository.findAllByUser(user);
+    }
+
+    public ResponseEntity<?> getDecryptedPassword(Long passwordId, String jwtToken) {
+        if(!jwtUtils.validateJwtToken(jwtToken)){
+            return ResponseEntity.badRequest().body(
+                    new ResponseMessage(ResponseMessage.ERR_UNAUTHORIZED_ACTION));
+        }
+
+        User user = userService.getUserByLogin(jwtUtils.getUsernameFromJwtToken(jwtToken));
+
+
+        Password password = passwordRepository.findPasswordById(passwordId);
+        String passwordHash = password.getPassword();
+
+        String decryptedPassword = decryptPassword(passwordHash, user.getPasswordHash());
+
+        return ResponseEntity.ok(
+                new ResponseMessage(decryptedPassword)
+        );
+    }
+
+    public ResponseEntity<?> deletePassword(Long passwordId, String jwtToken) {
+
+        //checking if user that delete password is same user that owns password
+        User user = userService.getUserByLogin(jwtUtils.getUsernameFromJwtToken(jwtToken));
+        Password password = passwordRepository.findPasswordById(passwordId);
+
+        if(!jwtUtils.validateJwtToken(jwtToken) ||
+                user != password.getUser()){
+            return ResponseEntity.badRequest().body(
+                    new ResponseMessage(ResponseMessage.ERR_UNAUTHORIZED_ACTION));
+        }
+
+        passwordRepository.deleteById(passwordId);
+
+        return ResponseEntity.ok(
+                new ResponseMessage(ResponseMessage.PASSWORD_DELETED));
     }
 
     public static String encryptPassword(String password, String encryptionKey) {
@@ -116,7 +153,7 @@ public class PasswordService {
             Key key = new SecretKeySpec(trimKey(encryptionKey).getBytes(), algorithm);
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] decodedPassword = Base64.getDecoder().decode(passwordToDecrypt);
+            byte[] decodedPassword = cipher.doFinal(Base64.getDecoder().decode(passwordToDecrypt));
             return new String(decodedPassword);
         }catch (Exception e){
             throw new RuntimeException(e);
@@ -126,4 +163,6 @@ public class PasswordService {
     public static String trimKey(String key){
         return key.substring(0,32);
     }
+
+
 }
