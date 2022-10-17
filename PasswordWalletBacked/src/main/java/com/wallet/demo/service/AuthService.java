@@ -9,6 +9,7 @@ import com.wallet.demo.payload.response.LoginResponse;
 import com.wallet.demo.payload.response.ResponseMessage;
 import com.wallet.demo.utils.JwtUtils;
 import io.jsonwebtoken.*;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,9 @@ public class AuthService {
     @Value("${app.pepper}")
     private static String PEPPER;
 
+    @Value("${app.secret_key_hmac}")
+    private static String SECRET_KEY;
+
     @Autowired
     public AuthService(UserService userService, JwtUtils jwtUtils, PasswordService passwordService) {
         this.userService = userService;
@@ -58,11 +62,7 @@ public class AuthService {
 
         String hashedPassword = user.getIsPasswordKeptAsHash()
                                         ? calculateSHA512(PEPPER+user.getSalt()+loginRequest.getPassword())
-                                        : calculateHMAC(loginRequest.getPassword(), user.getSalt());
-
-        /*String hashedPassword = user.getIsPasswordKeptAsHash()
-                                        ? calculateSHA512(PEPPER+user.getSalt()+loginRequest.getPassword())
-                                        : calculateHMAC(PEPPER+user.getSalt()+loginRequest.getPassword());*/
+                                        : calculateHMAC(loginRequest.getPassword(), SECRET_KEY);
 
 
         if(!user.getPasswordHash().equals(hashedPassword)){
@@ -94,11 +94,9 @@ public class AuthService {
 
         newUser.setSalt(generateSalt());
 
-
-        //!!!!
         newUser.setPasswordHash(registerRequest.getIsHash()
                                 ? calculateSHA512(PEPPER+newUser.getSalt()+registerRequest.getPassword())
-                                : calculateHMAC(registerRequest.getPassword(), newUser.getSalt()));
+                                : calculateHMAC(registerRequest.getPassword(), SECRET_KEY));
 
         userService.save(newUser);
 
@@ -117,9 +115,8 @@ public class AuthService {
         String userLogin = jwtUtils.getUsernameFromJwtToken(jwtToken);
         User user = userService.getUserByLogin(userLogin);
 
-        //!!!!
         String oldPasswordHash = user.getIsPasswordKeptAsHash() ? calculateSHA512(PEPPER+user.getSalt()+changeMainPasswordRequest.getOldPassword())
-                                                                : calculateHMAC(changeMainPasswordRequest.getOldPassword(), user.getSalt());
+                                                                : calculateHMAC(changeMainPasswordRequest.getOldPassword(), SECRET_KEY);
 
 
         if(!oldPasswordHash.equals(user.getPasswordHash())){
@@ -130,14 +127,12 @@ public class AuthService {
 
         user.setSalt(generateSalt());
 
-        //!!!!
         if (user.getIsPasswordKeptAsHash()) {
             user.setPasswordHash(calculateSHA512(PEPPER + user.getSalt() + changeMainPasswordRequest.getNewPassword()));
         } else {
-            user.setPasswordHash(calculateHMAC(changeMainPasswordRequest.getNewPassword(), user.getSalt()));
+            user.setPasswordHash(calculateHMAC(changeMainPasswordRequest.getNewPassword(), SECRET_KEY));
         }
 
-        //changing passwords hash
         Set<Password> passwordList = passwordService.getPasswords(jwtToken);
 
         passwordList.forEach(password -> {
@@ -155,19 +150,8 @@ public class AuthService {
     }
 
     public String calculateSHA512(String text) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            byte[] messageDigest = md.digest(text.getBytes());
-            BigInteger no = new BigInteger(1, messageDigest);
-            String hashText = no.toString(16);
-
-            while (hashText.length() < 32)
-                hashText = "0" + hashText;
-
-            return hashText;
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+      
+        return DigestUtils.sha512Hex(text);
     }
 
 
