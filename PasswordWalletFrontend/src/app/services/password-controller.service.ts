@@ -3,12 +3,13 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Password} from "../models/password";
 import {Router} from "@angular/router";
-import {Response} from "../models/response";
+import {PasswordResponse} from "../models/password-response";
+import {ChangeMainPasswordPayload} from "../models/change-main-password-payload";
 
 @Injectable({
   providedIn: "root"
 })
-export class PasswordService{
+export class PasswordControllerService {
 
   constructor(private http: HttpClient,
               private router: Router) {}
@@ -23,9 +24,9 @@ export class PasswordService{
     this.http.post(url, newPassword).subscribe(() => this.router.navigate(['passwords']));
   }
 
-  getDecryptedPassword(passwordId: number): Observable<Response> {
+  public getDecryptedPassword(passwordId: number): Observable<PasswordResponse> {
     const url = `http://localhost:8080/api/passwords/`+passwordId;
-    return this.http.get<Response>(url);
+    return this.http.get<PasswordResponse>(url);
   }
 
   editPassword(editedPassword: Password): Observable<any> {
@@ -33,8 +34,14 @@ export class PasswordService{
     return this.http.put(url, editedPassword)
   }
 
-  deletePassword(passwordId: number) {
-    const url = `http://localhost:8080/api/passwords/`+passwordId;
-    this.http.delete(url);
+  deletePassword(passwordId: number): Observable<any> {
+    const url = `http://localhost:8080/api/passwords/${passwordId}`;
+    return this.http.delete(url);
+  }
+
+  changeMainPassword(changePassword: ChangeMainPasswordPayload) {
+    const url = `http://localhost:8080/api/auth/change-main-password`;
+
+
   }
 }

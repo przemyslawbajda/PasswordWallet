@@ -3,5 +3,7 @@
 
   <div style="flex: 1"></div>
 
+  <button mat-button (click)="showPasswords()" *ngIf="isLoggedIn()" class="link">passwords</button>
+  <button mat-button (click)="changeMainPassword()" *ngIf="isLoggedIn()" class="link">change main password</button>
   <button mat-flat-button (click)="onLogout()" *ngIf="isLoggedIn()">logout</button>
 </mat-toolbar>

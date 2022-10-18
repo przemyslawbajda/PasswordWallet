@@ -1,9 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Password} from "../../models/password";
-import {PasswordService} from "../../services/password.service";
+import {PasswordControllerService} from "../../services/password-controller.service";
 import {MatDialog} from "@angular/material/dialog";
 import {EditPasswordComponent} from "../edit-password/edit-password.component";
 import {StoreService} from "../../store/store.service";
+import {take} from "rxjs/operators";
 
 @Component({
   selector: 'password',
@@ -14,11 +15,11 @@ export class PasswordComponent {
 
   @Input() password: Password;
 
-  constructor(private passwordService: PasswordService,
+  constructor(private store: StoreService,
               private editPasswordDialog: MatDialog) {}
 
   public onDelete(): void {
-    this.passwordService.deletePassword(this.password.id);
+    this.store.deletePassword(this.password.id);
   }
 
   public onEdit(): void {
@@ -29,5 +30,9 @@ export class PasswordComponent {
   }
 
   public onTogglePassword() {
+    this.password.password
+      ? this.store.setPassword(null,this.password.id)
+      : this.store.getDecryptedPassword(this.password.id);
+
   }
 }

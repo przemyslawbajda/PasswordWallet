@@ -54,7 +54,7 @@ public class AuthService {
 
         if(!userService.checkIfUserAlreadyExist(loginRequest.getLogin())){
             return ResponseEntity.badRequest().body(
-                    new ResponseMessage("login")
+                    new ResponseMessage(ResponseMessage.ERR_INCORRECT_LOGIN_PASSWORD)
             );
         }
 
@@ -150,7 +150,7 @@ public class AuthService {
     }
 
     public String calculateSHA512(String text) {
-      
+
         return DigestUtils.sha512Hex(text);
     }
 

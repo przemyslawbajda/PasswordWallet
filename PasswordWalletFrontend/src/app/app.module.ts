@@ -24,6 +24,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import { AddNewPasswordComponent } from './component/add-new-password/add-new-password.component';
 import { EditPasswordComponent } from './component/edit-password/edit-password.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import {ChangeMainPasswordComponent} from "./component/change-main-password/change-main-password.component";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     PasswordComponent,
     RegisterComponent,
     AddNewPasswordComponent,
-    EditPasswordComponent
+    EditPasswordComponent,
+    ChangeMainPasswordComponent
   ],
   imports: [
     BrowserModule,

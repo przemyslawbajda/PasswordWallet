@@ -6,6 +6,7 @@ import {Login} from "../models/login";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {RegisterPayload} from "../models/register-payload";
+import {ChangeMainPasswordPayload} from "../models/change-main-password-payload";
 
 @Injectable({
   providedIn: "root"
@@ -29,7 +30,13 @@ export class AuthService {
           });
           this.router.navigate(['passwords'])
         },
-        error: () => {}
+        error: (data: any) => {
+
+          this.snackBar.open(data.error.message, "OK", {
+            horizontalPosition: "end",
+            verticalPosition: "top",
+          });
+        }
       })
   }
 
@@ -43,7 +50,12 @@ export class AuthService {
           });
           this.router.navigate(['login'])
         },
-        error: () => {}
+        error: (data: any) => {
+          this.snackBar.open(data.error.message, "OK", {
+            horizontalPosition: "end",
+            verticalPosition: "top",
+          });
+        }
       })
   }
 
@@ -57,4 +69,25 @@ export class AuthService {
 
   }
 
+  changeMainPassword(changePassword: ChangeMainPasswordPayload) {
+
+    this.authControllerService.changeMainPassword(changePassword)
+      .subscribe( {
+        next: (data:any) =>{
+          this.snackBar.open(data.message, "OK", {
+            horizontalPosition: "end",
+            verticalPosition: "top",
+          });
+          this.router.navigate(['passwords'])
+        },
+        error: (data: any) => {
+          this.snackBar.open(data.error.message, "OK", {
+            horizontalPosition: "end",
+            verticalPosition: "top",
+          });
+        }
+      }
+
+    );
+  }
 }

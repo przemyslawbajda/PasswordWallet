@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {confirmPasswordValidator} from "../../validators/confirm-password.validator";
-import {PasswordService} from "../../services/password.service";
+import {PasswordControllerService} from "../../services/password-controller.service";
 
 @Component({
   selector: 'app-add-new-password',
@@ -12,7 +12,7 @@ export class AddNewPasswordComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private passwordService: PasswordService) { }
+  constructor(private passwordService: PasswordControllerService) { }
 
   ngOnInit(): void {
     this.createForm();

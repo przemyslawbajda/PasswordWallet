@@ -5,6 +5,7 @@ import {PasswordListComponent} from "./component/password-list/password-list.com
 import {RegisterComponent} from "./component/register/register.component";
 import {AddNewPasswordComponent} from "./component/add-new-password/add-new-password.component";
 import {EditPasswordComponent} from "./component/edit-password/edit-password.component";
+import {ChangeMainPasswordComponent} from "./component/change-main-password/change-main-password.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -12,7 +13,8 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent},
   { path: 'passwords', component: PasswordListComponent},
   { path: 'add-new-password', component: AddNewPasswordComponent},
-  { path: 'edit-password', component: EditPasswordComponent}
+  { path: 'edit-password', component: EditPasswordComponent},
+  { path: 'change-main-password', component: ChangeMainPasswordComponent}
 ];
 
 @NgModule({

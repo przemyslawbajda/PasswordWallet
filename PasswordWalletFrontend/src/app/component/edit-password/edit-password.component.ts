@@ -2,8 +2,9 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Password} from "../../models/password";
-import {PasswordService} from "../../services/password.service";
+import {PasswordControllerService} from "../../services/password-controller.service";
 import {Router} from "@angular/router";
+import {StoreService} from "../../store/store.service";
 
 @Component({
   selector: 'app-edit-password',
@@ -15,7 +16,8 @@ export class EditPasswordComponent implements OnInit {
   form: FormGroup;
 
   constructor(@Inject(MAT_DIALOG_DATA) public dialogData: Password,
-              private passwordService: PasswordService,
+              private passwordService: PasswordControllerService,
+              private store: StoreService,
               private dialogRef: MatDialogRef<EditPasswordComponent>) { }
 
   ngOnInit(): void {
@@ -39,20 +41,7 @@ export class EditPasswordComponent implements OnInit {
 
   }
 
-  onSubmit() {
-
-    let editedPassword = {
-      description: this.form.controls['description'].value,
-      id: this.dialogData.id,
-      login: this.form.controls['login'].value,
-      password: this.form.controls['password'].value,
-      webAddress: this.form.controls['webAddress'].value
-    }
-
-    this.passwordService.editPassword(editedPassword).subscribe(
-      () => {
-        this.dialogRef.close();
-      }
-    );
+  public onSubmit(): void {
+    this.store.editPassword({...this.form.value, id: this.dialogData.id}, this.dialogRef);
   }
 }

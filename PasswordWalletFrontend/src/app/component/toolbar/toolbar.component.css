@@ -1,0 +1,11 @@
+.mat-toolbar{
+  gap: 15px;
+}
+
+.mat-toolbar button {
+  font-size: 18px !important;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
