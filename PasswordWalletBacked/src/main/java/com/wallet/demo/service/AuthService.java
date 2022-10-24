@@ -8,7 +8,6 @@ import com.wallet.demo.payload.RegisterRequest;
 import com.wallet.demo.payload.response.LoginResponse;
 import com.wallet.demo.payload.response.ResponseMessage;
 import com.wallet.demo.utils.JwtUtils;
-import io.jsonwebtoken.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.security.SignatureException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
-
-import static javax.xml.crypto.dsig.SignatureMethod.HMAC_SHA512;
 
 @Service
 public class AuthService {

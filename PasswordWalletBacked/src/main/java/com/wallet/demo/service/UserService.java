@@ -1,7 +1,6 @@
 package com.wallet.demo.service;
 
 import com.wallet.demo.entity.User;
-import com.wallet.demo.payload.RegisterRequest;
 import com.wallet.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
