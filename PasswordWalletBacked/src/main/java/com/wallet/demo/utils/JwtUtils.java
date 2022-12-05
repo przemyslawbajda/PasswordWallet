@@ -16,10 +16,10 @@ public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${app.jwtSecret}")
-    String jwtSecret;
+    String jwtSecret = "dj84He8N24kv8SV";
 
     @Value("${app.jwtExpirationTime}")
-    Integer jwtExpirationTime;
+    Integer jwtExpirationTime = 3600000;
 
     public String calculateJwt(String login) {
         long now = System.currentTimeMillis();

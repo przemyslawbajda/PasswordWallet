@@ -142,7 +142,7 @@ public class PasswordService {
             byte[] encryptedPassword = cipher.doFinal(password.getBytes());
             return Base64.getEncoder().encodeToString(encryptedPassword);
         } catch (Exception e){
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -156,7 +156,7 @@ public class PasswordService {
             byte[] decodedPassword = cipher.doFinal(Base64.getDecoder().decode(passwordToDecrypt));
             return new String(decodedPassword);
         }catch (Exception e){
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
