@@ -9,3 +9,8 @@
 .link:hover {
   text-decoration: underline;
 }
+
+.login-attempt{
+  display: block;
+  font-size: 15px;
+}

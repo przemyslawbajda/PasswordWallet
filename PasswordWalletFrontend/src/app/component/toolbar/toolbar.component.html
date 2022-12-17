@@ -3,6 +3,11 @@
 
   <div style="flex: 1"></div>
 
+  <div>
+    <span *ngIf="isLoggedIn()" class="login-attempt"> Last successful login: {{lastSuccessful}} </span>
+    <span *ngIf="isLoggedIn()" class="login-attempt"> Last failed login:  {{lastFailed}}</span>
+  </div>
+
   <button mat-button (click)="showPasswords()" *ngIf="isLoggedIn()" class="link">passwords</button>
   <button mat-button (click)="changeMainPassword()" *ngIf="isLoggedIn()" class="link">change main password</button>
   <button mat-flat-button (click)="onLogout()" *ngIf="isLoggedIn()">logout</button>

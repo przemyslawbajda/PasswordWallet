@@ -9,15 +9,27 @@ import {Router} from "@angular/router";
 })
 export class ToolbarComponent {
 
+  private lastSuccessful: string = "";
+  private lastFailed: string = "";
+
+
   constructor(private authService: AuthService,
-              private router: Router) {}
+              private router: Router) {
+
+  }
 
   public onLogout(): void{
     this.authService.logout();
   }
 
   public isLoggedIn(): boolean {
-    return this.authService.isLoggedIn()
+
+    if(this.authService.isLoggedIn()){
+      this.lastFailed = localStorage.getItem("LAST_FAILED_ATTEMPT");
+      this.lastSuccessful = localStorage.getItem("LAST_SUCCESSFUL_ATTEMPT");
+      return true;
+    }
+     return false;
   }
 
   public showPasswords(): void{

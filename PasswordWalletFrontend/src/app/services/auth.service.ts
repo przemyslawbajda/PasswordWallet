@@ -24,6 +24,9 @@ export class AuthService {
         next: (data: Login) => {
           localStorage.setItem(LocalStorageEnum.LOGIN, data.userLogin);
           localStorage.setItem(LocalStorageEnum.JWT_TOKEN, data.jwt);
+          localStorage.setItem(LocalStorageEnum.LAST_SUCCESSFUL, data.lastSuccessfulAttempt);
+          localStorage.setItem(LocalStorageEnum.LAST_FAILED, data.lastFailedAttempt);
+
           this.snackBar.open(data.message, "OK", {
             horizontalPosition: "end",
             verticalPosition: "top",
