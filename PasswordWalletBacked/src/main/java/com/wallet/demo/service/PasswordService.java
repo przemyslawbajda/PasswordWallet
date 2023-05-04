@@ -1,10 +1,13 @@
 package com.wallet.demo.service;
 
 import com.wallet.demo.entity.Password;
+import com.wallet.demo.entity.SharedPassword;
 import com.wallet.demo.entity.User;
 import com.wallet.demo.payload.PasswordRequest;
+import com.wallet.demo.payload.SharePasswordRequest;
 import com.wallet.demo.payload.response.ResponseMessage;
 import com.wallet.demo.repository.PasswordRepository;
+import com.wallet.demo.repository.SharedPasswordRepository;
 import com.wallet.demo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +17,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Base64;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,11 +28,14 @@ public class PasswordService {
     private JwtUtils jwtUtils;
     private UserService userService;
 
+    private SharedPasswordRepository sharedPasswordRepository;
+
     @Autowired
-    public PasswordService(PasswordRepository passwordRepository, JwtUtils jwtUtils, UserService userService) {
+    public PasswordService(PasswordRepository passwordRepository, JwtUtils jwtUtils, UserService userService, SharedPasswordRepository sharedPasswordRepository) {
         this.passwordRepository = passwordRepository;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
+        this.sharedPasswordRepository = sharedPasswordRepository;
     }
 
     public ResponseEntity<?> addPassword(PasswordRequest passwordRequest, String jwtToken){
@@ -164,5 +170,62 @@ public class PasswordService {
         return key.substring(0,32);
     }
 
+    public ResponseEntity<?> sharePassword(SharePasswordRequest passwordRequest, String jwtToken){
 
+        if(!jwtUtils.validateJwtToken(jwtToken)){
+            return ResponseEntity.badRequest().body(
+                    new ResponseMessage(ResponseMessage.ERR_UNAUTHORIZED_ACTION));
+        }
+
+
+
+        User user = new User();
+        user.setId(passwordRequest.getUserId());
+
+        Password password = new Password();
+        password.setId(passwordRequest.getPasswordId());
+
+        SharedPassword newSharedPassword = new SharedPassword();
+        newSharedPassword.setUser(user);
+        newSharedPassword.setPassword(password);
+
+        sharedPasswordRepository.save(newSharedPassword);
+
+        return ResponseEntity.ok(
+                new ResponseMessage("password shared")
+        );
+    }
+
+    public ResponseEntity<?> getSharedPassword(String jwtToken) {
+        if(!jwtUtils.validateJwtToken(jwtToken)){
+            return ResponseEntity.badRequest().body(
+                    new ResponseMessage(ResponseMessage.ERR_UNAUTHORIZED_ACTION));
+        }
+
+        User user = userService.getUserByLogin(jwtUtils.getUsernameFromJwtToken(jwtToken));
+
+        Set<SharedPassword> sharedPasswords = sharedPasswordRepository.findAllByUser(user);
+
+        Set<Password> encryptedSharedPasswords = new HashSet<>();
+
+        for( SharedPassword sharedPassword : sharedPasswords) {
+            encryptedSharedPasswords.add(passwordRepository.findPasswordById(sharedPassword.getPassword().getId()));
+
+        }
+
+        Set<Password> decryptedSharedPasswords = new HashSet<>();;
+
+        for (Password encryptedPassword : encryptedSharedPasswords) {
+
+            User owner = userService.findUserById(encryptedPassword.getUser().getId());
+
+            String decryptedPassword = decryptPassword(encryptedPassword.getPassword(), owner.getPasswordHash());
+            encryptedPassword.setPassword(decryptedPassword);
+            decryptedSharedPasswords.add(encryptedPassword);
+        }
+
+
+        return ResponseEntity.ok().body(decryptedSharedPasswords);
+
+    }
 }

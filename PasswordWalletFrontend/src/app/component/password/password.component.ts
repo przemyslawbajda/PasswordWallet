@@ -1,10 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Password} from "../../models/password";
-import {PasswordControllerService} from "../../services/password-controller.service";
 import {MatDialog} from "@angular/material/dialog";
 import {EditPasswordComponent} from "../edit-password/edit-password.component";
 import {StoreService} from "../../store/store.service";
-import {take} from "rxjs/operators";
+import {SharePasswordComponent} from "../share-password/share-password.component";
 
 @Component({
   selector: 'password',
@@ -14,8 +13,9 @@ import {take} from "rxjs/operators";
 export class PasswordComponent {
 
   @Input() password: Password;
+  @Input() isEditMode: boolean = false;
 
-  constructor(private store: StoreService,
+  constructor(public store: StoreService,
               private editPasswordDialog: MatDialog) {}
 
   public onDelete(): void {
@@ -24,6 +24,13 @@ export class PasswordComponent {
 
   public onEdit(): void {
     this.editPasswordDialog.open(EditPasswordComponent, {
+      data: this.password,
+      width: '500px'
+    });
+  }
+
+  public onShare(): void {
+    this.editPasswordDialog.open(SharePasswordComponent, {
       data: this.password,
       width: '500px'
     });

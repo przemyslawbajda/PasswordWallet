@@ -5,6 +5,9 @@ import {Password} from "../models/password";
 import {Router} from "@angular/router";
 import {PasswordResponse} from "../models/password-response";
 import {ChangeMainPasswordPayload} from "../models/change-main-password-payload";
+import {User} from "../models/user";
+import {SharePassword} from "../models/share-password";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
@@ -39,9 +42,22 @@ export class PasswordControllerService {
     return this.http.delete(url);
   }
 
-  changeMainPassword(changePassword: ChangeMainPasswordPayload) {
+  public changeMainPassword(changePassword: ChangeMainPasswordPayload) {
     const url = `http://localhost:8080/api/auth/change-main-password`;
+  }
 
+  public getUsers(): Observable<User[]> {
+    const url = `http://localhost:8080/api/auth/user`;
+    return this.http.get<User[]>(url);
+  }
 
+  public getSharedPasswords(): Observable<Password[]> {
+    const url = `http://localhost:8080/api/shared-passwords`;
+    return this.http.get<Password[]>(url);
+  }
+
+  public sharePassword(share: SharePassword): Observable<any> {
+    const url = `http://localhost:8080/api/share`;
+    return this.http.post<any>(url, share);
   }
 }

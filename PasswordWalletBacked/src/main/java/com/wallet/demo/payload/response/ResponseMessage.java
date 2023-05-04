@@ -24,4 +24,7 @@ public class ResponseMessage {
     public final static String ERR_USER_ALREADY_EXISTS = "User with this login already exists!";
     public final static String ERR_INCORRECT_LOGIN_PASSWORD = "Incorrect login or password";
     public final static String ERR_UNAUTHORIZED_ACTION = "Unauthorized action";
+
+    public final static String IP_BLOCKED_PERMANENTLY= "Too many incorrect login attempts. Ip address permanently blocked. Contact administrator";
+    public final static String IP_BLOCKED_TEMPORARILY= "Too many incorrect login attempts. Ip address temporarily blocked. Try again later";
 }

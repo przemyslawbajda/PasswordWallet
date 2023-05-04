@@ -3,7 +3,17 @@
 
   <div style="flex: 1"></div>
 
+  <div>
+    <span *ngIf="isLoggedIn()" class="login-attempt"> Last successful login: {{lastSuccessful}} </span>
+    <span *ngIf="isLoggedIn()" class="login-attempt"> Last failed login:  {{lastFailed}}</span>
+  </div>
+
+  <mat-slide-toggle *ngIf="isLoggedIn()" [checked]="false" color="accent" (change)="onModeChange($event)">
+    Edit mode
+  </mat-slide-toggle>
+
   <button mat-button (click)="showPasswords()" *ngIf="isLoggedIn()" class="link">passwords</button>
+  <button mat-button (click)="showSharedPasswords()" *ngIf="isLoggedIn()" class="link">shared passwords</button>
   <button mat-button (click)="changeMainPassword()" *ngIf="isLoggedIn()" class="link">change main password</button>
   <button mat-flat-button (click)="onLogout()" *ngIf="isLoggedIn()">logout</button>
 </mat-toolbar>

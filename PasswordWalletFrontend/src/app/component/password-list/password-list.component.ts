@@ -18,5 +18,4 @@ export class PasswordListComponent implements OnInit {
     this.store$.getPasswords();
   }
 
-
 }

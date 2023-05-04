@@ -5,12 +5,13 @@ import com.wallet.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
     UserRepository userRepository;
 
-    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -26,4 +27,8 @@ public class UserService {
     public User getUserByLogin(String login){
         return userRepository.findUserByLogin(login);
     }
+
+    public User findUserById(Long id){return userRepository.findById(id).orElseThrow(RuntimeException::new);}
+
+    public List<User> findAllUsers(){return userRepository.findAll();}
 }
