@@ -1,9 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Password} from "../../models/password";
 import {PasswordControllerService} from "../../services/password-controller.service";
-import {Router} from "@angular/router";
 import {StoreService} from "../../store/store.service";
 
 @Component({

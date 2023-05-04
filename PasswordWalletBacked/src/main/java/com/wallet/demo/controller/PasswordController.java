@@ -2,6 +2,7 @@ package com.wallet.demo.controller;
 
 import com.wallet.demo.entity.Password;
 import com.wallet.demo.payload.PasswordRequest;
+import com.wallet.demo.payload.SharePasswordRequest;
 import com.wallet.demo.service.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +51,16 @@ public class PasswordController {
     public ResponseEntity<?> deletePassword(@PathVariable Long passwordId, @RequestHeader("JwtToken") String jwtToken){
 
         return passwordService.deletePassword(passwordId, jwtToken);
+    }
+
+    @PostMapping("share")
+    public ResponseEntity<?> sharePassword(@RequestBody SharePasswordRequest passwordRequest, @RequestHeader("JwtToken") String jwtToken){
+
+        return passwordService.sharePassword(passwordRequest, jwtToken);
+    }
+
+    @GetMapping("shared-passwords")
+    public ResponseEntity<?> getSharedPasswords(@RequestHeader("JwtToken") String jwtToken){
+        return passwordService.getSharedPassword(jwtToken);
     }
 }

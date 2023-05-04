@@ -72,6 +72,11 @@ export class AuthService {
 
   }
 
+  public getUsername(): string {
+    return localStorage.getItem(LocalStorageEnum.LOGIN);
+  }
+
+
   changeMainPassword(changePassword: ChangeMainPasswordPayload) {
 
     this.authControllerService.changeMainPassword(changePassword)

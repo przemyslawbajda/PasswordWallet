@@ -35,7 +35,7 @@ public class IpCheckService {
                 break;
             case 2:
                 ipCheck.setNumberOfIncorrectLoginAttempts(numberOfIncorrectAttempts+1);
-                ipCheck.setLockTime(LocalDateTime.now().plusSeconds(20));
+                ipCheck.setLockTime(LocalDateTime.now().plusSeconds(10));
                 break;
             case 3:
                 ipCheck.setNumberOfIncorrectLoginAttempts(numberOfIncorrectAttempts+1);

@@ -4,6 +4,7 @@ import com.wallet.demo.payload.ChangeMainPasswordRequest;
 import com.wallet.demo.payload.LoginRequest;
 import com.wallet.demo.payload.RegisterRequest;
 import com.wallet.demo.service.AuthService;
+import com.wallet.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,12 @@ import javax.validation.Valid;
 public class AuthController {
 
     private AuthService authService;
+    private UserService userService;
 
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -39,6 +42,12 @@ public class AuthController {
     public ResponseEntity<?> changeMainPassword(@RequestBody ChangeMainPasswordRequest changeMainPasswordRequest, @RequestHeader("JwtToken") String jwtToken){
 
         return authService.changeMainPassword(changeMainPasswordRequest, jwtToken);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getAllUsers(){
+
+        return ResponseEntity.ok().body(userService.findAllUsers());
     }
 
 }

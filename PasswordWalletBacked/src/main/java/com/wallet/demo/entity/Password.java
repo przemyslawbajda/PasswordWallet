@@ -15,8 +15,7 @@ public class Password {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @JsonIgnore
+    
     private String password;
 
     private String webAddress;

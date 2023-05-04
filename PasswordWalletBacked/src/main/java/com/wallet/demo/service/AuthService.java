@@ -94,7 +94,7 @@ public class AuthService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LoginAttempt successfulAttempt = loginAttemptService.getLastSuccessOrFailAttempt(user, true);
         LoginAttempt failedAttempt = loginAttemptService.getLastSuccessOrFailAttempt(user, false);
-        
+
         LoginAttempt goodLoginAttempt = loginAttemptService.generateLoginAttempt(user, true);
         loginAttemptService.save(goodLoginAttempt);
 
@@ -103,10 +103,10 @@ public class AuthService {
 
         return ResponseEntity.ok(
                 new LoginResponse(ResponseMessage.USER_LOGIN_SUCCESSFULLY,
-                                    user.getLogin(),
-                                    jwt,
-                                    successfulAttempt.getAttemptDate().format(formatter),
-                                    failedAttempt.getAttemptDate().format(formatter)));
+                        user.getLogin(),
+                        jwt,
+                        successfulAttempt != null ? successfulAttempt.getAttemptDate().format(formatter) : "",
+                        failedAttempt != null ? failedAttempt.getAttemptDate().format(formatter) : ""));
     }
 
 
